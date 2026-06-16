@@ -58,3 +58,27 @@ interface GigabitEthernet7/0.99
 encapsulation dot1Q 99
 ip address 192.168.3.193 255.255.255.192
 exit
+
+-- ROTEAMENTO
+
+enable
+configure terminal
+
+! IP do link que vem da Produção
+interface GigabitEthernet8/0
+ip address 192.168.100.6 255.255.255.252
+no shutdown
+exit
+
+! IP do link que vai para a Matriz
+interface GigabitEthernet9/0
+ip address 192.168.100.9 255.255.255.252
+no shutdown
+exit
+
+! Ativando o OSPF no Comercial
+router ospf 1
+network 192.168.3.0 0.0.0.255 area 0
+network 192.168.100.4 0.0.0.3 area 0
+network 192.168.100.8 0.0.0.3 area 0
+exit
