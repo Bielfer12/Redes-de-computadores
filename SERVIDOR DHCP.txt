@@ -1,0 +1,11 @@
+SERVIDOR DHCP
+
+enable
+configure terminal
+interface FastEthernet0/5
+switchport mode access
+switchport access vlan 99
+exit
+
+JOGAR A PORTA 0/5 NA VLAN99
+
