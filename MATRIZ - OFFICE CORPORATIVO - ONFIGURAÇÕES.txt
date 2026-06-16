@@ -73,3 +73,28 @@ encapsulation dot1Q 99
 ip address 192.168.1.225 255.255.255.224
 exit
 
+-- FAZER A CONEXÃO WAN E CONFIGURAR O PROTOCOLO DE ROTEAMENTO OSPF
+
+enable
+configure terminal
+
+! IP do link que vai para a Produção (Filial 1)
+interface GigabitEthernet8/0
+ip address 192.168.100.1 255.255.255.252
+no shutdown
+exit
+
+! IP do link que vai para o Comercial (Filial 2)
+interface GigabitEthernet9/0
+ip address 192.168.100.10 255.255.255.252
+no shutdown
+exit
+
+! Ativando o protocolo de roteamento OSPF
+router ospf 1
+! Anunciando a rede local da Matriz inteira
+network 192.168.1.0 0.0.0.255 area 0
+! Anunciando os links WAN
+network 192.168.100.0 0.0.0.3 area 0
+network 192.168.100.8 0.0.0.3 area 0
+exit
