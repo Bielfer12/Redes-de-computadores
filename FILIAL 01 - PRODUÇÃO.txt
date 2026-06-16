@@ -1,0 +1,67 @@
+FILIAL 01 - PRODUÇÃO 
+
+SWITCH
+
+enable
+configure terminal
+
+! Criando as VLANs específicas da Fábrica e as de Wi-Fi/Gerenciamento
+vlan 21
+name Conversao
+vlan 22
+name Impressao
+vlan 100
+name Wi-Fi_Visitantes
+vlan 110
+name Wi-Fi_CORP
+vlan 12
+name ADM_PCP
+vlan 99
+name Gerenciamento
+exit
+
+! Configurando a porta Trunk para o Roteador
+interface FastEthernet0/1
+switchport mode trunk
+exit
+
+ROTEADOR
+
+enable
+configure terminal
+
+! Ligando a interface física
+interface GigabitEthernet7/0
+no shutdown
+exit
+
+! Criando as subinterfaces com os IPs exatos do planejamento da Fábrica
+interface GigabitEthernet7/0.21
+encapsulation dot1Q 21
+ip address 192.168.2.1 255.255.255.192
+exit
+
+interface GigabitEthernet7/0.22
+encapsulation dot1Q 22
+ip address 192.168.2.65 255.255.255.192
+exit
+
+interface GigabitEthernet7/0.100
+encapsulation dot1Q 100
+ip address 192.168.2.129 255.255.255.224
+exit
+
+interface GigabitEthernet7/0.110
+encapsulation dot1Q 110
+ip address 192.168.2.161 255.255.255.224
+exit
+
+interface GigabitEthernet7/0.12
+encapsulation dot1Q 12
+ip address 192.168.2.193 255.255.255.224
+exit
+
+interface GigabitEthernet7/0.99
+encapsulation dot1Q 99
+ip address 192.168.2.225 255.255.255.224
+exit

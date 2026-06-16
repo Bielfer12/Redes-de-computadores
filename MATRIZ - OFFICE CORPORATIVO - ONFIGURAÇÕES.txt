@@ -1,0 +1,75 @@
+MATRIZ - OFFICE CORPORATIVO
+
+enable
+configure terminal
+
+! Criando todas as VLANs do seu projeto
+vlan 2
+name Engenharia
+vlan 100
+name Wi-Fi_Visitantes
+vlan 110
+name Wi-Fi_CORP
+vlan 12
+name ADM
+vlan 5
+name Financeiro
+vlan 6
+name Contabilidade
+vlan 99
+name Gerenciamento
+exit
+
+! Configurando a porta Trunk (A porta conectada ao Roteador)
+! (Assumindo que você usou a FastEthernet0/1 para ligar no Router)
+interface FastEthernet0/1
+switchport mode trunk
+exit
+
+ROTEADOR
+
+enable
+configure terminal
+
+! 1. Ligando a porta física (Isso vai deixar a luz verde)
+! (Assumindo que conectamos na GigabitEthernet7/0)
+interface GigabitEthernet7/0
+no shutdown
+exit
+
+! 2. Criando os Gateways (Subinterfaces)
+interface GigabitEthernet7/0.2
+encapsulation dot1Q 2
+ip address 192.168.1.1 255.255.255.192
+exit
+
+interface GigabitEthernet7/0.100
+encapsulation dot1Q 100
+ip address 192.168.1.65 255.255.255.192
+exit
+
+interface GigabitEthernet7/0.110
+encapsulation dot1Q 110
+ip address 192.168.1.129 255.255.255.224
+exit
+
+interface GigabitEthernet7/0.12
+encapsulation dot1Q 12
+ip address 192.168.1.161 255.255.255.224
+exit
+
+interface GigabitEthernet7/0.5
+encapsulation dot1Q 5
+ip address 192.168.1.193 255.255.255.240
+exit
+
+interface GigabitEthernet7/0.6
+encapsulation dot1Q 6
+ip address 192.168.1.209 255.255.255.240
+exit
+
+interface GigabitEthernet7/0.99
+encapsulation dot1Q 99
+ip address 192.168.1.225 255.255.255.224
+exit
+
