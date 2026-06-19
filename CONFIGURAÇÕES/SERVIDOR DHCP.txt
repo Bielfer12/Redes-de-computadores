@@ -1,0 +1,14 @@
+# Planejamento e Configuração do Serviço DHCP Centralizado
+
+## 1. Arquitetura de Isolamento (VLAN 99)
+O servidor DHCP está alocado exclusivamente na **VLAN de Gerenciamento (VLAN 99)**. Esta segregação protege o serviço de atribuição de endereços contra ataques de *spoofing* e garante que apenas dispositivos de infraestrutura tenham acesso à rede do servidor.
+
+### Configuração da Porta do Servidor (Switch)
+Para garantir que o servidor pertença à VLAN correta:
+```bash
+enable
+configure terminal
+interface FastEthernet0/5
+ switchport mode access
+ switchport access vlan 99
+ no shutdown

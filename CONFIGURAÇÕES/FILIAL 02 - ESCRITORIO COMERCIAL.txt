@@ -1,0 +1,84 @@
+FILIAL 02 - ESCRITORIO COMERCIAL 
+
+SWITCH
+
+enable
+configure terminal
+
+Criando as VLANs do bloco Comercial
+vlan 30
+name Comercial
+vlan 100
+name Wi-Fi_Visitantes
+vlan 110
+name Wi-Fi_CORP
+vlan 12
+name ADM
+vlan 99
+name Gerenciamento
+exit
+
+Configurando a porta Trunk para o Roteador
+interface FastEthernet0/1
+switchport mode trunk
+exit
+
+ROTEADOR
+
+enable
+configure terminal
+
+Ligando a interface física
+interface GigabitEthernet7/0
+no shutdown
+exit
+
+Criando as subinterfaces com os IPs exatos do planejamento Comercial
+interface GigabitEthernet7/0.30
+encapsulation dot1Q 30
+ip address 192.168.3.1 255.255.255.192
+exit
+
+interface GigabitEthernet7/0.100
+encapsulation dot1Q 100
+ip address 192.168.3.65 255.255.255.192
+exit
+
+interface GigabitEthernet7/0.110
+encapsulation dot1Q 110
+ip address 192.168.3.129 255.255.255.224
+exit
+
+interface GigabitEthernet7/0.12
+encapsulation dot1Q 12
+ip address 192.168.3.161 255.255.255.224
+exit
+
+interface GigabitEthernet7/0.99
+encapsulation dot1Q 99
+ip address 192.168.3.193 255.255.255.192
+exit
+
+-- ROTEAMENTO
+
+enable
+configure terminal
+
+IP do link que vem da Produção
+interface GigabitEthernet8/0
+ip address 192.168.100.6 255.255.255.252
+no shutdown
+exit
+
+IP do link que vai para a Matriz
+interface GigabitEthernet9/0
+ip address 192.168.100.9 255.255.255.252
+no shutdown
+exit
+
+Ativando o OSPF no Comercial
+router ospf 1
+network 192.168.3.0 0.0.0.255 area 0
+network 192.168.100.4 0.0.0.3 area 0
+network 192.168.100.8 0.0.0.3 area 0
+exit

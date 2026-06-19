@@ -1,0 +1,98 @@
+MATRIZ - OFFICE CORPORATIVO
+
+enable
+configure terminal
+
+Criando todas as VLANs do seu projeto
+vlan 2
+name Engenharia
+vlan 100
+name Wi-Fi_Visitantes
+vlan 110
+name Wi-Fi_CORP
+vlan 12
+name ADM
+vlan 5
+name Financeiro
+vlan 6
+name Contabilidade
+vlan 99
+name Gerenciamento
+exit
+
+Configurando a porta Trunk (A porta conectada ao Roteador)
+interface FastEthernet0/1
+switchport mode trunk
+exit
+
+ROTEADOR
+
+enable
+configure terminal
+
+1. Ligando a porta física (Isso vai deixar a luz verde)
+interface GigabitEthernet7/0
+no shutdown
+exit
+
+2. Criando os Gateways (Subinterfaces)
+interface GigabitEthernet7/0.2
+encapsulation dot1Q 2
+ip address 192.168.1.1 255.255.255.192
+exit
+
+interface GigabitEthernet7/0.100
+encapsulation dot1Q 100
+ip address 192.168.1.65 255.255.255.192
+exit
+
+interface GigabitEthernet7/0.110
+encapsulation dot1Q 110
+ip address 192.168.1.129 255.255.255.224
+exit
+
+interface GigabitEthernet7/0.12
+encapsulation dot1Q 12
+ip address 192.168.1.161 255.255.255.224
+exit
+
+interface GigabitEthernet7/0.5
+encapsulation dot1Q 5
+ip address 192.168.1.193 255.255.255.240
+exit
+
+interface GigabitEthernet7/0.6
+encapsulation dot1Q 6
+ip address 192.168.1.209 255.255.255.240
+exit
+
+interface GigabitEthernet7/0.99
+encapsulation dot1Q 99
+ip address 192.168.1.225 255.255.255.224
+exit
+
+-- FAZER A CONEXÃO WAN E CONFIGURAR O PROTOCOLO DE ROTEAMENTO OSPF
+
+enable
+configure terminal
+
+IP do link que vai para a Produção (Filial 1)
+interface GigabitEthernet8/0
+ip address 192.168.100.1 255.255.255.252
+no shutdown
+exit
+
+IP do link que vai para o Comercial (Filial 2)
+interface GigabitEthernet9/0
+ip address 192.168.100.10 255.255.255.252
+no shutdown
+exit
+
+Ativando o protocolo de roteamento OSPF
+router ospf 1
+Anunciando a rede local da Matriz inteira
+network 192.168.1.0 0.0.0.255 area 0
+Anunciando os links WAN
+network 192.168.100.0 0.0.0.3 area 0
+network 192.168.100.8 0.0.0.3 area 0
+exit
